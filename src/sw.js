@@ -1,19 +1,15 @@
 const CACHE_NAME = "storyapp-v1";
 const API_URL = "https://story-api.dicoding.dev/v1/stories";
 
-// Aset utama yang harus di-cache (sesuaikan dengan isi folder dist)
 const urlsToCache = [
-  "/", // root
+  "/",
   "/index.html",
-  "/app.bundle.js", // output Webpack
+  "/app.bundle.js",
   "/manifest.json",
   "/favicon.png",
-  "/icons/icon-192x192.png", // untuk notifikasi
+  "/icons/icon-192x192.png",
 ];
 
-// ----------------------------------------------------
-// INSTALL: Cache App Shell
-// ----------------------------------------------------
 self.addEventListener("install", (event) => {
   console.log("Service Worker: Installing...");
   event.waitUntil(
@@ -30,9 +26,6 @@ self.addEventListener("install", (event) => {
   );
 });
 
-// ----------------------------------------------------
-// ACTIVATE: Hapus cache lama
-// ----------------------------------------------------
 self.addEventListener("activate", (event) => {
   console.log("Service Worker: Activating...");
   event.waitUntil(
@@ -49,13 +42,9 @@ self.addEventListener("activate", (event) => {
   );
 });
 
-// ----------------------------------------------------
-// FETCH: Cache-first untuk App Shell, Network-first untuk API
-// ----------------------------------------------------
 self.addEventListener("fetch", (event) => {
   const { request } = event;
 
-  // Tangani request ke API → network first, fallback ke JSON kosong
   if (request.url.startsWith(API_URL)) {
     event.respondWith(
       fetch(request).catch(() => {
@@ -67,7 +56,6 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Untuk App Shell → cache first
   event.respondWith(
     caches.match(request).then((response) => {
       return response || fetch(request);
@@ -75,9 +63,6 @@ self.addEventListener("fetch", (event) => {
   );
 });
 
-// ----------------------------------------------------
-// PUSH NOTIFICATION
-// ----------------------------------------------------
 self.addEventListener("push", (event) => {
   const data = event.data?.json() || {};
   const title = data.title || "Pesan Baru Story App";

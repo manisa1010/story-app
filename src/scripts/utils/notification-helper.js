@@ -2,7 +2,7 @@ const VAPID_PUBLIC_KEY =
   "BCCs2eonMI-6H2ctvFaWg-UYdDv387Vno_bzUzALpB442r2lCnsHmtrx8biyPi_E-1fSGABK_Qs_GlvPoJJqxbk";
 
 const PUSH_SUBSCRIPTION_ENDPOINT =
-  "https://story-api.dicoding.dev/v1/notifications/subscribe"; // ✅ diperbaiki
+  "https://story-api.dicoding.dev/v1/notifications/subscribe";
 
 const urlBase64ToUint8Array = (base64String) => {
   const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
@@ -54,7 +54,7 @@ const NotificationHelper = {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // ✅ pastikan token valid
+            Authorization: `Bearer ${token}`,
           },
           body: JSON.stringify(subscription),
         });

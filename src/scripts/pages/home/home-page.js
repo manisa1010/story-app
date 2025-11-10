@@ -31,14 +31,13 @@ const HomePage = {
     try {
       const stories = await StoryAPI.getAllStoriesWithLocation(token);
 
-      // ✅ Cek apakah response fallback dari Service Worker
       if (stories.error === "offline") {
         listContainer.innerHTML = `
       <p class="message-area" style="background-color: #fff3cd; color: #856404;">
         📴 Kamu sedang offline. Cerita tidak bisa dimuat.
       </p>
     `;
-        this._renderMap([]); // render map kosong
+        this._renderMap([]);
         return;
       }
 

@@ -11,7 +11,7 @@ module.exports = {
     clean: true,
   },
 
-  mode: "development", // ganti ke "production" saat build final
+  mode: "development",
 
   module: {
     rules: [
@@ -62,8 +62,8 @@ module.exports = {
     },
     port: 9000,
     open: true,
-    hot: false, // ❌ matikan HMR untuk hindari WebSocket error
-    liveReload: false, // ❌ matikan live reload juga
+    hot: false,
+    liveReload: false,
     historyApiFallback: true,
     client: {
       overlay: true,

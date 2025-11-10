@@ -30,7 +30,6 @@ a:hover {
     text-decoration: underline;
 }
 
-/* --- Aksesibilitas & Struktur Dasar --- */
 .skip-link {
     position: absolute;
     top: -40px;
@@ -68,7 +67,6 @@ footer {
     color: #666;
 }
 
-/* --- App Bar --- */
 .app-bar {
     background-color: var(--color-primary);
     color: white;
@@ -104,7 +102,6 @@ footer {
     background-color: var(--color-primary-dark);
 }
 
-/* --- Story List and Card --- */
 .story-list {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -163,7 +160,6 @@ footer {
     color: #777;
 }
 
-/* --- Map Containers --- */
 .map-container {
     margin-top: 20px;
 }
@@ -175,7 +171,6 @@ footer {
     border-radius: 4px;
 }
 
-/* --- Detail Modal/Overlay --- */
 .detail-overlay {
     position: fixed;
     top: 0;
@@ -264,11 +259,8 @@ footer {
     to { opacity: 1; transform: scale(1); }
 }
 
-/* --- FORMULIR TERKONSOLIDASI (Login, Register, Add Story) --- */
-
-/* Basis Container Formulir */
 .form-section {
-    max-width: 400px; /* Untuk Login/Register */
+    max-width: 400px;
     margin: 20px auto;
     padding: 32px 24px;
     background-color: white;
@@ -279,7 +271,6 @@ footer {
     gap: 20px;
 }
 
-/* Khusus untuk Tambah Cerita (lebih lebar) */
 .add-story-form {
     max-width: 600px;
     margin: 20px auto;
@@ -292,7 +283,6 @@ footer {
     gap: 16px;
 }
 
-/* Header Formulir */
 .form-section h2, .add-story-form h2 {
     font-size: 1.6rem;
     font-weight: 700;
@@ -301,7 +291,6 @@ footer {
     margin-bottom: 8px;
 }
 
-/* Label & Grouping */
 .form-group {
     margin-bottom: 15px;
 }
@@ -309,11 +298,10 @@ footer {
 .form-group label {
     font-weight: 500;
     margin-bottom: 6px;
-    display: block; /* Penting untuk Aksesibilitas */
+    display: block;
     color: #444;
 }
 
-/* Input Fields */
 .form-group input[type="text"],
 .form-group input[type="email"],
 .form-group input[type="password"],
@@ -354,7 +342,6 @@ footer {
     background-color: var(--color-primary-dark);
 }
 
-/* Link Bantuan (Register/Login) */
 .register-link, .login-link {
     font-size: 0.9rem;
     text-align: center;

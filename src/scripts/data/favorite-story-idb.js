@@ -1,5 +1,3 @@
-// src/scripts/data/favorite-story-idb.js
-
 import { openDB } from "idb";
 
 const DATABASE_NAME = "stories-db";
@@ -8,7 +6,6 @@ const OBJECT_STORE_NAME = "favorites";
 
 const dbPromise = openDB(DATABASE_NAME, DATABASE_VERSION, {
   upgrade(database) {
-    // Membuat object store jika belum ada
     if (!database.objectStoreNames.contains(OBJECT_STORE_NAME)) {
       database.createObjectStore(OBJECT_STORE_NAME, { keyPath: "id" });
     }
@@ -25,8 +22,6 @@ const FavoriteStoryIdb = {
   },
 
   async putStory(story) {
-    // Memastikan objek memiliki properti 'id' karena kita menggunakannya sebagai keyPath
-    // Kita hanya perlu menyimpan data yang relevan untuk list dan detail
     const storyToSave = {
       id: story.id,
       name: story.name,

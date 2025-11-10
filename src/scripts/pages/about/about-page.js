@@ -8,9 +8,7 @@ const AboutPage = {
     `;
   },
 
-  async afterRender() {
-    // Do your job here
-  },
+  async afterRender() {},
 };
 
 export default AboutPage;

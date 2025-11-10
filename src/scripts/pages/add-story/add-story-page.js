@@ -5,30 +5,35 @@ const AddStoryPage = {
   async render(container) {
     container.innerHTML = `
     <section class="content-section">
-  <form class="add-story-form">
-    <h2>Tambah Cerita Baru</h2>
+      <form class="add-story-form" id="addStoryForm">
+        <h2>Tambah Cerita Baru</h2>
 
-    <label for="description">Deskripsi Cerita *</label>
-    <textarea id="description" name="description" placeholder="Tuliskan cerita Anda di sini..." required></textarea>
+        <label for="description">Deskripsi Cerita *</label>
+        <textarea id="description" name="description" placeholder="Tuliskan cerita Anda di sini..." required></textarea>
 
-    <label for="photo">Unggah Foto (Max 1MB) *</label>
-    <input type="file" id="photo" name="photo" accept="image/*" required />
+        <label for="photo">Unggah Foto (Max 1MB) *</label>
+        <input type="file" id="photo" name="photo" accept="image/*" required />
+        <img id="previewImage" style="display: none; max-width: 100%; margin-top: 1rem; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.2);" alt="Preview Foto" />
 
-    <label>Pilih Lokasi di Peta (Opsional)</label>
-    <p style="font-size: 0.85rem; color: #666;">Klik di peta untuk mendapatkan koordinat Lat/Lon.</p>
-    <div class="map-container" id="addStoryMap"></div>
+        <label>Pilih Lokasi di Peta (Opsional)</label>
+        <p style="font-size: 0.85rem; color: #666;">Klik di peta untuk mendapatkan koordinat Lat/Lon.</p>
+        <div class="map-container" id="addStoryMap"></div>
 
-    <label for="lat">Latitude (Lat)</label>
-    <input type="text" id="lat" name="lat" readonly />
+        <label for="lat">Latitude (Lat)</label>
+        <input type="text" id="lat" name="lat" readonly />
 
-    <label for="lon">Longitude (Lon)</label>
-    <input type="text" id="lon" name="lon" readonly />
+        <label for="lon">Longitude (Lon)</label>
+        <input type="text" id="lon" name="lon" readonly />
 
-    <button type="submit">Unggah Cerita</button>
-  </form>
-</section>
+        <div id="formMessage" style="margin-top: 1rem; font-weight: bold;"></div>
+
+        <button type="submit">Unggah Cerita</button>
+      </form>
+    </section>
     `;
+  },
 
+  async afterRender() {
     this._initializeForm();
   },
 
@@ -62,10 +67,10 @@ const AddStoryPage = {
 
     photoInput.addEventListener("change", (event) => {
       const file = event.target.files[0];
-      if (file) {
+      if (file && previewImage) {
         previewImage.src = URL.createObjectURL(file);
         previewImage.style.display = "block";
-      } else {
+      } else if (previewImage) {
         previewImage.style.display = "none";
       }
     });
@@ -94,7 +99,7 @@ const AddStoryPage = {
         messageArea.textContent = "🎉 Cerita berhasil diunggah!";
         messageArea.style.color = "green";
         form.reset();
-        previewImage.style.display = "none";
+        if (previewImage) previewImage.style.display = "none";
         if (marker) map.removeLayer(marker);
 
         setTimeout(() => {

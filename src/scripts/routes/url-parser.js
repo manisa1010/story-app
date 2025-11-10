@@ -1,12 +1,10 @@
 const UrlParser = {
-  // Untuk routing: mencocokkan dengan routes.js
   parseActiveUrlWithCombiner() {
     const url = window.location.hash.slice(1).toLowerCase();
     const splittedUrl = this._urlSplitter(url);
     return this._urlCombiner(splittedUrl);
   },
 
-  // Untuk ambil parameter: misalnya id di /detail/:id
   parseActiveUrlWithoutCombiner() {
     const url = window.location.hash.slice(1);
     const splittedUrl = this._urlSplitter(url);

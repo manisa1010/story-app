@@ -1,0 +1,113 @@
+const CACHE_NAME = "storyapp-v1";
+const API_URL = "https://story-api.dicoding.dev/v1/stories";
+
+// Aset utama yang harus di-cache (sesuaikan dengan isi folder dist)
+const urlsToCache = [
+  "/", // root
+  "/index.html",
+  "/app.bundle.js", // output Webpack
+  "/manifest.json",
+  "/favicon.png",
+  "/icons/icon-192x192.png", // untuk notifikasi
+];
+
+// ----------------------------------------------------
+// INSTALL: Cache App Shell
+// ----------------------------------------------------
+self.addEventListener("install", (event) => {
+  console.log("Service Worker: Installing...");
+  event.waitUntil(
+    caches.open(CACHE_NAME).then((cache) => {
+      console.log("Service Worker: Caching App Shell assets");
+      return Promise.all(
+        urlsToCache.map((url) =>
+          cache.add(url).catch((err) => {
+            console.warn("Gagal cache:", url, err);
+          })
+        )
+      );
+    })
+  );
+});
+
+// ----------------------------------------------------
+// ACTIVATE: Hapus cache lama
+// ----------------------------------------------------
+self.addEventListener("activate", (event) => {
+  console.log("Service Worker: Activating...");
+  event.waitUntil(
+    caches.keys().then((cacheNames) =>
+      Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== CACHE_NAME) {
+            console.log("Service Worker: Deleting old cache:", cacheName);
+            return caches.delete(cacheName);
+          }
+        })
+      )
+    )
+  );
+});
+
+// ----------------------------------------------------
+// FETCH: Cache-first untuk App Shell, Network-first untuk API
+// ----------------------------------------------------
+self.addEventListener("fetch", (event) => {
+  const { request } = event;
+
+  // Tangani request ke API → network first, fallback ke JSON kosong
+  if (request.url.startsWith(API_URL)) {
+    event.respondWith(
+      fetch(request).catch(() => {
+        return new Response(JSON.stringify({ stories: [], error: "offline" }), {
+          headers: { "Content-Type": "application/json" },
+        });
+      })
+    );
+    return;
+  }
+
+  // Untuk App Shell → cache first
+  event.respondWith(
+    caches.match(request).then((response) => {
+      return response || fetch(request);
+    })
+  );
+});
+
+// ----------------------------------------------------
+// PUSH NOTIFICATION
+// ----------------------------------------------------
+self.addEventListener("push", (event) => {
+  const data = event.data?.json() || {};
+  const title = data.title || "Pesan Baru Story App";
+  const options = {
+    body: data.message || "Anda punya notifikasi baru dari Story App.",
+    icon: "/icons/icon-192x192.png",
+    data: {
+      url: data.url || "#/home",
+    },
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const targetUrl = event.notification.data.url;
+
+  event.waitUntil(
+    clients
+      .matchAll({ type: "window", includeUncontrolled: true })
+      .then((clientList) => {
+        for (const client of clientList) {
+          if (client.url === targetUrl && "focus" in client) {
+            return client.focus();
+          }
+        }
+        if (clients.openWindow) {
+          return clients.openWindow(targetUrl);
+        }
+      })
+  );
+});

@@ -7,8 +7,11 @@ const urlsToCache = [
   "/app.bundle.js",
   "/manifest.json",
   "/favicon.png",
-  "/icons/icon-192x192.png",
+  "/images/logo.png",
 ];
+
+// ⬇️ Tambahan untuk cegah notifikasi duplikat
+let lastNotificationId = null;
 
 self.addEventListener("install", (event) => {
   console.log("Service Worker: Installing...");
@@ -68,11 +71,20 @@ self.addEventListener("push", (event) => {
   const title = data.title || "Pesan Baru Story App";
   const options = {
     body: data.message || "Anda punya notifikasi baru dari Story App.",
-    icon: "/icons/icon-192x192.png",
+    icon: "/images/logo.png",
     data: {
       url: data.url || "#/home",
+      id: data.id || Date.now(), // ⬅️ Tambahan ID unik
     },
   };
+
+  // ⬇️ Cegah duplikat notifikasi
+  if (options.data.id === lastNotificationId) {
+    console.log("Notifikasi sudah ditampilkan, skip.");
+    return;
+  }
+
+  lastNotificationId = options.data.id;
 
   event.waitUntil(self.registration.showNotification(title, options));
 });

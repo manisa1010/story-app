@@ -4,7 +4,7 @@ const FavoritesPage = {
   async render(container) {
     container.innerHTML = `
       <section class="content-section">
-        <h2>Daftar Cerita Favorit</h2>
+        <h1>Daftar Cerita Favorit</h1>
         <div id="favorites-list" class="story-list"></div>
       </section>
     `;

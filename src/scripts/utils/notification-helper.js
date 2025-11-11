@@ -9,7 +9,7 @@ const urlBase64ToUint8Array = (base64String) => {
   const base64 = (base64String + padding).replace(/-/g, "+").replace(/_/g, "/");
   const rawData = window.atob(base64);
   const outputArray = new Uint8Array(rawData.length);
-  for (let i = 0; i < rawData.length; i += 1) {
+  for (let i = 0; i < rawData.length; i++) {
     outputArray[i] = rawData.charCodeAt(i);
   }
   return outputArray;
@@ -41,33 +41,41 @@ const NotificationHelper = {
     const registration = await navigator.serviceWorker.ready;
     let subscription = await registration.pushManager.getSubscription();
 
-    if (subscription === null) {
-      const applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+    const sendSubscriptionToServer = async (sub) => {
+      const response = await fetch(PUSH_SUBSCRIPTION_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(sub), // ⬅️ Kirim langsung tanpa ubah
+      });
 
-      try {
-        subscription = await registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey,
-        });
-
-        const response = await fetch(PUSH_SUBSCRIPTION_ENDPOINT, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify(subscription),
-        });
-
-        if (!response.ok) {
-          throw new Error("Gagal menyimpan push subscription ke server.");
-        }
-
-        console.log("Push subscription successfully sent to server.");
-      } catch (e) {
-        console.error("Failed to subscribe user or send subscription:", e);
-        return null;
+      if (!response.ok) {
+        console.error("❌ Gagal kirim subscription ke server.");
+      } else {
+        console.log("✅ Subscription berhasil dikirim ke server.");
       }
+    };
+
+    if (subscription !== null) {
+      console.log("User already subscribed to push notifications.");
+      await sendSubscriptionToServer(subscription);
+      return subscription;
+    }
+
+    const applicationServerKey = urlBase64ToUint8Array(VAPID_PUBLIC_KEY);
+
+    try {
+      subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey,
+      });
+
+      await sendSubscriptionToServer(subscription);
+    } catch (e) {
+      console.error("❌ Failed to subscribe user or send subscription:", e);
+      return null;
     }
 
     return subscription;

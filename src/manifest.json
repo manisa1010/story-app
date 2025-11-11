@@ -10,11 +10,12 @@
   "orientation": "portrait",
   "lang": "id-ID",
   "prefer_related_applications": false,
+  "gcm_sender_id": "482941778795",
   "icons": [
-  {
-    "src": "/images/logo.png",
-    "sizes": "512x512",
-    "type": "image/png"
-  }
-]
+    {
+      "src": "/images/logo.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
 }

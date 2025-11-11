@@ -10,7 +10,6 @@ const urlsToCache = [
   "/images/logo.png",
 ];
 
-// ⬇️ Tambahan untuk cegah notifikasi duplikat
 let lastNotificationId = null;
 
 self.addEventListener("install", (event) => {
@@ -74,11 +73,10 @@ self.addEventListener("push", (event) => {
     icon: "/images/logo.png",
     data: {
       url: data.url || "#/home",
-      id: data.id || Date.now(), // ⬅️ Tambahan ID unik
+      id: data.id || Date.now(),
     },
   };
 
-  // ⬇️ Cegah duplikat notifikasi
   if (options.data.id === lastNotificationId) {
     console.log("Notifikasi sudah ditampilkan, skip.");
     return;

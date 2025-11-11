@@ -48,7 +48,7 @@ const NotificationHelper = {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify(sub), // ⬅️ Kirim langsung tanpa ubah
+        body: JSON.stringify(sub),
       });
 
       if (!response.ok) {
